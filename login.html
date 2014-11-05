@@ -1,0 +1,27 @@
+<head>
+  <!-- Beginning of Google Identity Toolkit Sign In button -->
+  <!-- Code snippet can be downloaded according to the guide https://developers.google.com/identity-toolkit/quickstart/ -->
+  <script type="text/javascript" src="//www.gstatic.com/authtoolkit/js/gitkit.js"></script>
+  <link type=text/css rel=stylesheet href="//www.gstatic.com/authtoolkit/css/gitkit.css" />
+
+  <script type=text/javascript>
+    window.google.identitytoolkit.signInButton(
+        '#navbar',
+        {
+          widgetUrl: '/gitkit',
+          signOutUrl: "/"
+        }
+    );
+  </script>
+  <!-- End of Google Identity Toolkit Sign In button -->
+</head>
+<body>
+<div id="navbar"></div>
+<p>
+  <% if gitkit_user %>
+    Welcome back! email = '<%= gitkit_user.email %>', id = '<%= gitkit_user.user_id %>', identity provider = '<%= gitkit_user.provider_id.to_s %>'
+  <% else %>
+    You are not logged in.
+  <% end %>
+</p>
+</body>

@@ -1,0 +1,52 @@
+This is the Ruby client library for Google Identity Toolkit services.
+
+Sample usage
+=====================
+
+require 'gitkit_client'
+
+# Initialize the Gitkit client instance
+gitkit_client = GitkitLib::GitkitClient.create_from_config_file 'gitkit-server-config.json'
+
+# Verifies a GitkitToken
+gitkit_user, error = gitkit_client.verify_gitkit_token token_string
+
+# Upload passwords
+  def calc_sha1(key, plain_text, salt)
+    hmac = OpenSSL::HMAC.new key, 'sha1'
+    hmac << plain_text
+    hmac << salt
+    hmac.digest
+  end
+
+  hash_key = 'hash-key'
+
+  user1 = GitkitLib::GitkitUser.new
+  user1.email = '1234@example.com'
+  user1.user_id = '1234'
+  user1.salt = 'salt-1'
+  user1.password_hash = calc_sha1(hash_key, '1111', 'salt-1')
+
+  user2 = GitkitLib::GitkitUser.new
+  user2.email = '5678@example.com'
+  user2.user_id = '5678'
+  user2.salt = 'salt-2'
+  user2.password_hash = calc_sha1(hash_key, '5555', 'salt-2')
+  user2.name = '56 78'
+
+  gitkit_client.upload_users 'HMAC_SHA1', hash_key, [user1, user2]
+
+# Get user by email
+gitkit_client.get_user_by_email '1234@example.com'
+
+# Get user by id
+gitkit_client.get_user_by_id '1234'
+
+# Delete a user
+gitkit_client.delete_user '1234'
+
+# Download all accounts
+gitkit_client.get_all_users { |account|
+  pp account
+}
+
