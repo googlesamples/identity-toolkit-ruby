@@ -40,6 +40,6 @@ end
 
 # Endpoint to send email for ResetPassword & ChangeEmail actions
 post '/sendemail' do
-  result = gitkit_client.get_oob_result params, request.ip
+  result = gitkit_client.get_oob_result params, request.ip, request.cookies['gtoken']
   result[:response_body]
 end
