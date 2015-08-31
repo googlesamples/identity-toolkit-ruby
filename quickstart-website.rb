@@ -16,6 +16,7 @@ require 'rubygems'
 require 'gitkit_client'
 require 'sinatra'
 require 'cgi'
+require 'pp'
 
 gitkit_client = GitkitLib::GitkitClient.create_from_config_file 'gitkit-server-config.json'
 
@@ -23,23 +24,26 @@ set :port, 8000
 
 # Page with the Gitkit Sign In button
 get '/' do
-  token = request.cookies["gtoken"]
+  token = request.cookies['gtoken']
   gitkit_user,_ = gitkit_client.verify_gitkit_token token
   erb File.read('login.html'), :locals => {:gitkit_user => gitkit_user}
 end
 
 # Gitkit widget page for password login and federated login
 get '/gitkit' do
-  erb File.read('gitkit-widget.html'), :locals => {:postBody => CGI.escape(request.body.read)}
+  erb File.read('widget.html'), :locals => {:postBody => CGI.escape(request.body.read)}
 end
 
 # IDP may post assertion to the endpoint
 post '/gitkit' do
-  erb File.read('gitkit-widget.html'), :locals => {:postBody => CGI.escape(request.body.read)}
+  erb File.read('widget.html'), :locals => {:postBody => CGI.escape(request.body.read)}
 end
 
 # Endpoint to send email for ResetPassword & ChangeEmail actions
 post '/sendemail' do
   result = gitkit_client.get_oob_result params, request.ip, request.cookies['gtoken']
+  # Actual application should send email according to the result
+  # In this sample code we only print out the result object
+  pp result
   result[:response_body]
 end
